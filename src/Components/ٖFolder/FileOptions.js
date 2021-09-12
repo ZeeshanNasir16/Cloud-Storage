@@ -6,8 +6,6 @@ import {
    ListItemIcon,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
-// Icons
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';

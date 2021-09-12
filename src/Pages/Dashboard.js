@@ -19,7 +19,7 @@ import FolderLayout from '../Components/layouts/common/FolderLayout';
 import Folder from '../Components/ٖFolder/Folder';
 import File from '../Components/ٖFolder/File';
 import Subheader from '../Components/common/SubHeader';
-import EmptyDashboard from '../Components/layouts/Dashboard/EmptyDashboard';
+// import EmptyDashboard from '../Components/layouts/Dashboard/EmptyDashboard';
 
 const DRAWER_WIDTH = 300;
 

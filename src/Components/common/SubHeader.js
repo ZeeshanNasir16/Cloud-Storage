@@ -80,36 +80,9 @@ function SubHeader({ currentFolder }) {
                     .map((p) => p.name)
                     .join('/')}/${currentFolder.name}/`;
 
-         //  const filePath =
-         //     currentFolder === ROOT_FOLDER
-         //        ? `${currentFolder.path.join('/')}/${file.name}`
-         //        : `${currentFolder.path
-         //             .map((p) => p.name)
-         //             .join('/')}/${currentFolder.name}/${file.name}`;
-
          //   //? Store file in storage of firebase,
          //   //? in ref dive the path of file storage
          //   //? put method uploads file in specified location
-
-         //  //? Code to check if file already exists and tells user if found in storage
-         //  const storageRef = storage.ref(
-         //     `/files/${currentUser.uid}/${folderPath}`
-         //  );
-
-         //  storageRef
-         //     .child(file.name)
-         //     .getDownloadURL()
-         //     .then(onResolve, onReject);
-
-         //  function onResolve(foundURL) {
-         //     console.log('Found ');
-         //  }
-
-         //  function onReject(error) {
-         //     console.log('Not Found ', error.code);
-         //  }
-
-         //  //? ----------- File check code ends
 
          const uploadTask = storage
             .ref(

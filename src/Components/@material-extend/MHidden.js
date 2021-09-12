@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types';
-// material
 import { useMediaQuery } from '@material-ui/core';
-
-// ----------------------------------------------------------------------
 
 MHidden.propTypes = {
    children: PropTypes.node,

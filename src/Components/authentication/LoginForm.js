@@ -31,8 +31,6 @@ export function LoginForm() {
    const history = useHistory();
 
    const onFormSubmit = async (data) => {
-      //   console.log(data);
-
       try {
          setLoading(true);
          await signin(data.email, data.password);

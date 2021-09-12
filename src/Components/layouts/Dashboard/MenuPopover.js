@@ -1,9 +1,5 @@
-// import PropTypes from 'prop-types';
-// material
 import { Popover } from '@material-ui/core';
 import { alpha, styled } from '@material-ui/core/styles';
-
-// ----------------------------------------------------------------------
 
 const ArrowStyle = styled('span')(({ theme }) => ({
    [theme.breakpoints.up('sm')]: {

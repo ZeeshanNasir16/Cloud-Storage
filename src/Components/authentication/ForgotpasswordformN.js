@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { useAuth } from '../../Context/AuthContext';
 import MuiAlert from '@material-ui/lab/Alert';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
    root: {
@@ -45,7 +45,6 @@ export const ForgotPasswordForm = () => {
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState('');
    const [message, setMessage] = useState('');
-   const history = useHistory();
 
    const classes = useStyles();
 

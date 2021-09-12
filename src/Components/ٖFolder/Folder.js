@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { Avatar, Typography, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import FileOptions from './FileOptions';
-// icons
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const FOLDER_ICONS = [
@@ -21,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
    root: {
       display: 'flex',
       flexFlow: 'column wrap',
-      //   justifyContent: 'center',
       alignItems: 'center',
       position: 'relative',
       padding: theme.spacing(1),
@@ -59,10 +57,6 @@ const useStyles = makeStyles((theme) => ({
          margin: 0,
       },
    },
-
-   //    opened: {
-   //       border: `1px solid ${theme.palette.primary.dark}`,
-   //    },
 }));
 
 function Folder({ folder }) {

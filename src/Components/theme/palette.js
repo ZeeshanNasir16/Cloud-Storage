@@ -12,7 +12,6 @@ export const changePalette = (theme) => {
          secondary: theme === 'dark' ? GREY[200] : GREY[500],
          disabled: theme === 'dark' ? PRIMARY.main : GREY[500],
       },
-      error: { ...ERROR },
       divider: GREY[300],
       action: { ...actions },
    };
@@ -28,15 +27,6 @@ const PRIMARY = {
    main: '#00AB55',
    dark: '#007B55',
    darker: '#005249',
-   contrastText: '#fff',
-};
-
-const ERROR = {
-   lighter: '#FFE7D9',
-   light: '#FFA48D',
-   main: '#FF4842',
-   dark: '#B72136',
-   darker: '#7A0C2E',
    contrastText: '#fff',
 };
 

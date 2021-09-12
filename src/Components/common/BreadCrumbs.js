@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Breadcrumbs, Typography } from '@material-ui/core';
-// import Link from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
 import { ROOT_FOLDER } from '../../hooks/useFolder';
 import HomeIcon from '@material-ui/icons/Home';

@@ -2,7 +2,6 @@ import React from 'react';
 import { styled } from '@material-ui/core/styles';
 import { Typography, Grid } from '@material-ui/core';
 import SiteLogo from '../LogoSection/SiteLogo';
-import Page from './Page';
 
 const ContentStyle = styled('div')(({ theme }) => ({
    maxWidth: 350,
@@ -25,9 +24,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
       backgroundColor: '#fff',
       boxShadow: '0 6px 15px rgb(0 0 0 / 16%)',
    },
-   //    [theme.breakpoints.up('sm')]: {
-   //       width: '350px',
-   //    },
 }));
 
 const ContentContainer = styled('div')(({ theme }) => ({

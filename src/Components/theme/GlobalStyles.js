@@ -1,7 +1,5 @@
 import { withStyles } from '@material-ui/styles';
 
-// ----------------------------------------------------------------------
-
 const GlobalStyles = withStyles((theme) => ({
    '@global': {
       '*': {
@@ -64,10 +62,6 @@ const GlobalStyles = withStyles((theme) => ({
          color: theme.palette.primary.dark,
          textDecoration: 'none',
          verticalAlign: '-webkit-baseline-middle',
-
-         //  '&:hover': {
-         //     borderBottom: `1px solid ${theme.palette.primary.dark}`,
-         //  },
       },
       img: { display: 'inline-block', maxWidth: '100%' },
    },
