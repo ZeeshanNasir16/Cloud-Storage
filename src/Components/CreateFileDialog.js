@@ -34,14 +34,10 @@ export default function CreateFileDialog({
 }) {
    const methods = useForm();
    const { currentUser } = useAuth();
+   //    console.log(currentFolder.path);
 
    const formSubmit = (data) => {
-      console.log(currentFolder);
-      console.log('Before current folder check');
-
       if (currentFolder === null) return;
-
-      console.log('After current folder check');
 
       const path = [...currentFolder.path];
 

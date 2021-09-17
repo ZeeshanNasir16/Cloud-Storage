@@ -43,7 +43,6 @@ function SubHeader({ currentFolder }) {
    };
 
    function closeDialog(fileid) {
-      console.log('Close Dialog ', fileid);
       setUploadingFiles((prevUploadingFiles) =>
          prevUploadingFiles.filter((uploadFile) => {
             return uploadFile.id !== fileid;
@@ -53,7 +52,6 @@ function SubHeader({ currentFolder }) {
 
    const uploadFile = (e) => {
       const file = e.target.files[0];
-      console.log('Upload event called');
 
       if (currentFolder == null || file == null) return;
 
