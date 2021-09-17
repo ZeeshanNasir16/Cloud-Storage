@@ -47,12 +47,17 @@ export default function FileMenu({
             </ListItemIcon>
             <Typography variant='inherit'>{ft}</Typography>
          </MenuItem>
-         <MenuItem data-my-value='download' onClick={selectedOption}>
-            <ListItemIcon className={classes.listItemIconStyle}>
-               <DownloadIcon />
-            </ListItemIcon>
-            <Typography variant='inherit'>Download</Typography>
-         </MenuItem>
+         {type !== 'folder' && (
+            <MenuItem
+               data-my-value='download'
+               onClick={selectedOption}
+            >
+               <ListItemIcon className={classes.listItemIconStyle}>
+                  <DownloadIcon />
+               </ListItemIcon>
+               <Typography variant='inherit'>Download</Typography>
+            </MenuItem>
+         )}
          <MenuItem data-my-value='rename' onClick={selectedOption}>
             <ListItemIcon className={classes.listItemIconStyle}>
                <EditIcon />

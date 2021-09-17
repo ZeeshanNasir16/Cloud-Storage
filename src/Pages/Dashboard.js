@@ -19,6 +19,9 @@ import FolderLayout from '../Components/layouts/common/FolderLayout';
 import Folder from '../Components/ٖFolder/Folder';
 import File from '../Components/ٖFolder/File';
 import Subheader from '../Components/common/SubHeader';
+import { toast } from 'react-toastify';
+import { database } from '../firebase';
+
 // import EmptyDashboard from '../Components/layouts/Dashboard/EmptyDashboard';
 
 const DRAWER_WIDTH = 300;
@@ -56,12 +59,74 @@ function Dashboard() {
       state.folder
    );
 
-   console.log('Dashboard ', folder, childFolders, childFiles);
-
    const [open, setOpen] = useState(false);
 
    const toggleSideBar = () => {
       setOpen((prev) => !prev);
+   };
+
+   //? func to check filename and rename file if not same
+   const checkChildFiles = async (type, dirName, dirId) => {
+      if (type === 'file') {
+         let casesensitive = dirName.toLowerCase();
+         const result =
+            childFiles.filter(
+               (file) => file.name.toLowerCase() === casesensitive
+            ).length > 0;
+
+         if (!result) {
+            //? Update file name
+
+            try {
+               await database.files.doc(dirId).update({
+                  name: dirName,
+               });
+
+               toast.success(`${type} name updated successfully`, {
+                  position: toast.POSITION.TOP_CENTER,
+               });
+            } catch (error) {
+               toast.error(`Failed to rename, ${error.code}`, {
+                  position: toast.POSITION.TOP_CENTER,
+               });
+            }
+         } else
+            toast.warning(
+               'File with same name already exists, choose different name',
+               {
+                  position: toast.POSITION.TOP_CENTER,
+               }
+            );
+      } else {
+         let casesensitive = dirName.toLowerCase();
+         const result =
+            childFolders.filter(
+               (folder) => folder.name.toLowerCase() === casesensitive
+            ).length > 0;
+
+         if (!result) {
+            //? Update file name
+
+            try {
+               await database.folders.doc(dirId).update({
+                  name: dirName,
+               });
+               toast.success(`${type} name updated successfully`, {
+                  position: toast.POSITION.TOP_CENTER,
+               });
+            } catch (error) {
+               toast.error(`Failed to rename, ${error.code}`, {
+                  position: toast.POSITION.TOP_CENTER,
+               });
+            }
+         } else
+            toast.warning(
+               'Folder with same name already exists, choose different name',
+               {
+                  position: toast.POSITION.TOP_CENTER,
+               }
+            );
+      }
    };
 
    const renderContent = (
@@ -131,12 +196,14 @@ function Dashboard() {
             {childFolders === null || childFiles === null ? (
                <div>Loading</div>
             ) : (
+               // childFolders.length === 0 && childFiles.length === 0
                <FolderLayout>
                   {childFolders.length > 0 &&
                      childFolders.map((childFolder) => (
                         <Folder
                            key={childFolder.id}
                            folder={childFolder}
+                           parentDirChk={checkChildFiles}
                         />
                      ))}
                   {childFiles.length > 0 &&
@@ -145,6 +212,7 @@ function Dashboard() {
                            key={childFile.id}
                            file_ext={childFile.name.split('.').pop()}
                            file={childFile}
+                           parentDirChk={checkChildFiles}
                         />
                      ))}
                </FolderLayout>

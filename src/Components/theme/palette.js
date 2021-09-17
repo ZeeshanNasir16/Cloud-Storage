@@ -8,8 +8,8 @@ export const changePalette = (theme) => {
          default: theme === 'dark' ? '#1A222B' : '#F7F9FC',
       },
       text: {
-         primary: theme === 'dark' ? GREY[300] : GREY[800],
-         secondary: theme === 'dark' ? GREY[200] : GREY[500],
+         primary: theme === 'dark' ? GREY[300] : GREY[900],
+         secondary: theme === 'dark' ? GREY[200] : GREY[600],
          disabled: theme === 'dark' ? PRIMARY.main : GREY[500],
       },
       divider: GREY[300],

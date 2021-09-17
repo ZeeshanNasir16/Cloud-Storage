@@ -11,17 +11,19 @@ function FormInput({ name, label, type }) {
             control={control}
             defaultValue=''
             rules={{ required: `${label} required` }}
-            render={({ field }) => (
-               <TextField
-                  {...field}
-                  label={label}
-                  name={name}
-                  type={type}
-                  required
-                  fullWidth
-                  variant='outlined'
-               />
-            )}
+            render={({ field }) => {
+               return (
+                  <TextField
+                     {...field}
+                     label={label}
+                     name={name}
+                     type={type}
+                     required
+                     fullWidth
+                     variant='outlined'
+                  />
+               );
+            }}
          />
       </Grid>
    );
