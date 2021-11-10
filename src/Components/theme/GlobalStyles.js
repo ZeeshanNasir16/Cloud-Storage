@@ -20,7 +20,7 @@ const GlobalStyles = withStyles((theme) => ({
     '#root': {
       width: '100%',
       height: '100%',
-      overflowY: 'scroll', /// Check for alternate
+      overflowY: 'auto', /// Check for alternate
       // backgroundColor: theme.palette.background.default,
     },
     '#logo': {
