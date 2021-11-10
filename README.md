@@ -10,6 +10,7 @@ The application is designed and developed using ReactJS and Material UI. Authent
 - Directory TreeView
 - Light/Dark Mode
 - Fully responsive layout
+- Currently, 2 types of files are allowed to upload (documents & image files)
 
 
 ![image](https://i.ibb.co/6YwS5FT/boxCloud.png)
