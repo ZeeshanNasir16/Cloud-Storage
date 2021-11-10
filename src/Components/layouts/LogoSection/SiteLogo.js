@@ -1,7 +1,7 @@
 import React from 'react';
 import { ButtonBase } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import LogoImg from '../../../assets/logo.svg';
+import LogoImg from 'assets/logo.svg';
 
 function SiteLogo({ w, h }) {
    return (

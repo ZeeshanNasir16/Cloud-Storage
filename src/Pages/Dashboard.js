@@ -1,225 +1,173 @@
 import React, { useState } from 'react';
-import { useFolder } from '../hooks/useFolder';
+import { useFolder } from 'hooks/useFolder';
 import { useParams, useLocation } from 'react-router-dom';
-import {
-   Box,
-   Drawer,
-   Toolbar,
-   Divider,
-   Backdrop,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import NavBar from '../Components/common/NavBar';
-import SideMenu from '../Components/CustomDrawer/SideMenu';
-import { MHidden } from '../Components/@material-extend';
-import Search from '../Components/common/Search';
-import TreeView from '../Components/CustomDrawer/TreeView';
-import ScrollBar from '../Components/common/ScrollBar';
-import FolderLayout from '../Components/layouts/common/FolderLayout';
-import Folder from '../Components/ٖFolder/Folder';
-import File from '../Components/ٖFolder/File';
-import Subheader from '../Components/common/SubHeader';
 import { toast } from 'react-toastify';
 import { database } from '../firebase';
-
-// import EmptyDashboard from '../Components/layouts/Dashboard/EmptyDashboard';
-
-const DRAWER_WIDTH = 300;
-
-const useStyles = makeStyles((theme) => ({
-   root: {
-      display: 'flex',
-      position: 'relative',
-   },
-   backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: '#fff',
-   },
-   drawer: {
-      minWidth: DRAWER_WIDTH,
-      flexShrink: 0,
-   },
-   drawerPaper: {
-      minWidth: DRAWER_WIDTH,
-   },
-   content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-      position: 'relative',
-   },
-}));
+import { Box, Drawer, Toolbar, Backdrop } from '@material-ui/core';
+import { MHidden } from 'Components/@material-extend';
+import NavBar from 'Components/common/NavBar';
+import Subheader from 'Components/common/SubHeader';
+import DrawerContent from 'Components/CustomDrawer/DrawerContent';
+import SideMenu from 'Components/CustomDrawer/SideMenu';
+import FolderLayout from 'Components/layouts/common/FolderLayout';
+import Folder from 'Components/Directory/Folder';
+import File from 'Components/Directory/File';
+import EmptyDashboard from 'Components/layouts/Dashboard/EmptyDashboard';
+import { useThemeContext } from 'Components/theme';
+import { useStyles } from 'Styles/DashboardStyles';
 
 function Dashboard() {
-   const classes = useStyles();
-   const { folderId } = useParams();
-   const { state = {} } = useLocation();
+  const themeMode = useThemeContext();
+  const classes = useStyles(themeMode);
+  const { folderId } = useParams();
+  const { state = {} } = useLocation();
 
-   const { folder, childFolders, childFiles } = useFolder(
-      folderId,
-      state.folder
-   );
+  const { folder, childFolders, childFiles } = useFolder(
+    folderId,
+    state.folder
+  );
 
-   const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-   const toggleSideBar = () => {
-      setOpen((prev) => !prev);
-   };
+  const toggleSideBar = () => {
+    setOpen((prev) => !prev);
+  };
 
-   //? func to check filename and rename file if not same
-   const checkChildFiles = async (type, dirName, dirId) => {
-      if (type === 'file') {
-         let casesensitive = dirName.toLowerCase();
-         const result =
-            childFiles.filter(
-               (file) => file.name.toLowerCase() === casesensitive
-            ).length > 0;
+  //? func to check filename and rename file if not same
+  const checkChildFiles = async (type, dirName, dirId) => {
+    if (type === 'file') {
+      let casesensitive = dirName.toLowerCase();
+      const result =
+        childFiles.filter(
+          (file) => file.name.toLowerCase() === casesensitive
+        ).length > 0;
 
-         if (!result) {
-            //? Update file name
+      if (!result) {
+        //? Update file name
+        try {
+          await database.files.doc(dirId).update({
+            name: dirName,
+          });
 
-            try {
-               await database.files.doc(dirId).update({
-                  name: dirName,
-               });
+          toast.success(`${type} name updated successfully`, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        } catch (error) {
+          toast.error(`Failed to rename, ${error.code}`, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
+      } else
+        toast.warning(
+          'File with same name already exists, choose different name',
+          {
+            position: toast.POSITION.TOP_CENTER,
+          }
+        );
+    } else {
+      let casesensitive = dirName.toLowerCase();
+      const result =
+        childFolders.filter(
+          (folder) => folder.name.toLowerCase() === casesensitive
+        ).length > 0;
 
-               toast.success(`${type} name updated successfully`, {
-                  position: toast.POSITION.TOP_CENTER,
-               });
-            } catch (error) {
-               toast.error(`Failed to rename, ${error.code}`, {
-                  position: toast.POSITION.TOP_CENTER,
-               });
-            }
-         } else
-            toast.warning(
-               'File with same name already exists, choose different name',
-               {
-                  position: toast.POSITION.TOP_CENTER,
-               }
-            );
-      } else {
-         let casesensitive = dirName.toLowerCase();
-         const result =
-            childFolders.filter(
-               (folder) => folder.name.toLowerCase() === casesensitive
-            ).length > 0;
+      if (!result) {
+        //? Update file name
+        try {
+          await database.folders.doc(dirId).update({
+            name: dirName,
+          });
+          toast.success(`${type} name updated successfully`, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        } catch (error) {
+          toast.error(`Failed to rename, ${error.code}`, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
+      } else
+        toast.warning(
+          'Folder with same name already exists, choose different name',
+          {
+            position: toast.POSITION.TOP_CENTER,
+          }
+        );
+    }
+  };
 
-         if (!result) {
-            //? Update file name
-
-            try {
-               await database.folders.doc(dirId).update({
-                  name: dirName,
-               });
-               toast.success(`${type} name updated successfully`, {
-                  position: toast.POSITION.TOP_CENTER,
-               });
-            } catch (error) {
-               toast.error(`Failed to rename, ${error.code}`, {
-                  position: toast.POSITION.TOP_CENTER,
-               });
-            }
-         } else
-            toast.warning(
-               'Folder with same name already exists, choose different name',
-               {
-                  position: toast.POSITION.TOP_CENTER,
-               }
-            );
-      }
-   };
-
-   const renderContent = (
-      <React.Fragment>
-         <Toolbar />
-         <Search />
-         <Divider />
-         <ScrollBar
-            sx={{
-               height: '100%',
-               '& .simplebar-content': {
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  overflow: 'scroll',
-               },
+  return (
+    <div className={classes.root}>
+      <Backdrop
+        className={classes.backdrop}
+        open={open}
+        onClick={toggleSideBar}
+      />
+      <Box
+        sx={{
+          display: 'flex',
+          minHeight: '100vh',
+        }}
+      >
+        <NavBar />
+        <MHidden width='smDown'>
+          <Drawer
+            variant='permanent'
+            className={classes.drawer}
+            onClose={toggleSideBar}
+            classes={{
+              paper: classes.drawerPaper,
             }}
-         >
-            <TreeView />
-         </ScrollBar>
-      </React.Fragment>
-   );
-
-   return (
-      <div className={classes.root}>
-         <Backdrop
-            className={classes.backdrop}
+          >
+            <DrawerContent />
+          </Drawer>
+        </MHidden>
+        <MHidden width='mdUp'>
+          <SideMenu onOpenSidebar={toggleSideBar} open={open} />
+          <Drawer
             open={open}
-            onClick={toggleSideBar}
-         />
-         <Box
-            sx={{
-               display: 'flex',
-               minHeight: '100vh',
+            className={classes.drawer}
+            onClose={toggleSideBar}
+            classes={{
+              paper: classes.drawerPaper,
             }}
-         >
-            <NavBar />
-            <MHidden width='smDown'>
-               <Drawer
-                  variant='permanent'
-                  className={classes.drawer}
-                  onClose={toggleSideBar}
-                  classes={{
-                     paper: classes.drawerPaper,
-                  }}
-               >
-                  {renderContent}
-               </Drawer>
-            </MHidden>
-            <MHidden width='mdUp'>
-               <SideMenu onOpenSidebar={toggleSideBar} open={open} />
-               <Drawer
-                  open={open}
-                  className={classes.drawer}
-                  onClose={toggleSideBar}
-                  classes={{
-                     paper: classes.drawerPaper,
-                  }}
-               >
-                  {renderContent}
-               </Drawer>
-            </MHidden>
-         </Box>
-         <main className={classes.content}>
-            <Toolbar />
-            <Subheader currentFolder={folder} />
-            {childFolders === null || childFiles === null ? (
-               <div>Loading</div>
-            ) : (
-               // childFolders.length === 0 && childFiles.length === 0
-               <FolderLayout>
-                  {childFolders.length > 0 &&
-                     childFolders.map((childFolder) => (
-                        <Folder
-                           key={childFolder.id}
-                           folder={childFolder}
-                           parentDirChk={checkChildFiles}
-                        />
-                     ))}
-                  {childFiles.length > 0 &&
-                     childFiles.map((childFile) => (
-                        <File
-                           key={childFile.id}
-                           file_ext={childFile.name.split('.').pop()}
-                           file={childFile}
-                           parentDirChk={checkChildFiles}
-                        />
-                     ))}
-               </FolderLayout>
-            )}
-         </main>
-      </div>
-   );
+          >
+            <DrawerContent />
+          </Drawer>
+        </MHidden>
+      </Box>
+      <main className={classes.content}>
+        <Toolbar />
+        <Subheader currentFolder={folder} />
+        {childFolders === null || childFiles === null ? (
+          <Box className={classes.loader}>
+            <img src='/static/loader/spinner.gif' alt='loader' />
+          </Box>
+        ) : !childFolders.length && !childFiles.length ? (
+          <EmptyDashboard />
+        ) : (
+          <FolderLayout>
+            {childFolders.length > 0 &&
+              childFolders.map((childFolder) => (
+                <Folder
+                  key={childFolder.id}
+                  folder={childFolder}
+                  parentDirChk={checkChildFiles}
+                />
+              ))}
+            {childFiles.length > 0 &&
+              childFiles.map((childFile) => (
+                <File
+                  key={childFile.id}
+                  file_ext={childFile.name.split('.').pop()}
+                  file={childFile}
+                  parentDirChk={checkChildFiles}
+                />
+              ))}
+          </FolderLayout>
+        )}
+      </main>
+    </div>
+  );
 }
 
 export default Dashboard;
