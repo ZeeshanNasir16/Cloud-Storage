@@ -29,6 +29,7 @@ export const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: 'inherit',
     display: 'block',
+    position: 'relative',
     top: '40%',
     transform: 'translateY(-60%)',
     textAlign: 'center',

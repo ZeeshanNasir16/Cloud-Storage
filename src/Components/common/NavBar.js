@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import LogoSection from 'Components/layouts/LogoSection/SiteLogo';
 import { styled } from '@material-ui/core/styles';
 import AccountPopover from 'Components/layouts/Dashboard/AccountPopover';
-import ThemeMode from 'Components/theme/ThemeIcon';
+import ThemeMode from 'Components/theme/ThemeModeIcon';
 
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 72;
