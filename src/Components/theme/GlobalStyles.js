@@ -20,8 +20,7 @@ const GlobalStyles = withStyles((theme) => ({
     '#root': {
       width: '100%',
       height: '100%',
-      overflowY: 'scroll', /// Check for alternate
-      // backgroundColor: theme.palette.background.default,
+      overflowY: 'auto',
     },
     '#logo': {
       textAlign: 'center',
@@ -77,7 +76,7 @@ const GlobalStyles = withStyles((theme) => ({
       boxShadow: `0 0 2px 0 ${theme.palette.grey[500_24]}, 0 20px 40px -4px ${theme.palette.grey[500_24]}`,
       border: `solid 1px ${theme.palette.grey[500_48]}`,
       zIndex: 222,
-      overflow: 'scroll',
+      overflowY: 'auto',
     },
   },
 }))(() => null);

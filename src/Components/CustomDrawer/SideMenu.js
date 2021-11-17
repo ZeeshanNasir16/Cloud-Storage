@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: (props) =>
       props.themeMode
         ? theme.mode['dark'][0]
-        : theme.mode['light'][1],
+        : theme.mode['light'][0],
     borderRadius: '0px 24px 24px 24px',
     boxShadow:
       'rgb(145 158 171 / 24%) 0px 0px 2px 0px, rgb(145 158 171 / 24%) 0px 12px 24px 0px',
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SideMenu({ onOpenSidebar, open }) {
-  const themeMode = useThemeContext();
+  const { themeMode } = useThemeContext();
   const classes = useStyles({ open, themeMode });
   return (
     <div className={classes.root}>

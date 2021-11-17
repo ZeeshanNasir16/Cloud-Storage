@@ -49,7 +49,11 @@ const usePortal = (id, title) => {
           parentElem.removeChild(
             document.getElementById('portal_title')
           );
-      } else if (!parentElem.childElementCount) parentElem.remove();
+        parentElem.remove();
+      } else if (!parentElem.childElementCount) {
+        console.log(`parentElem`, parentElem);
+        parentElem.remove();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);

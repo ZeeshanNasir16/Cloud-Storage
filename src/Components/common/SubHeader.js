@@ -22,10 +22,6 @@ import {
 import { useStyles } from 'Styles/SubheaderStyles';
 import Portal from 'Components/Portal';
 
-//? Allowing file types
-var allowedExtensions =
-  /(\.doc|\.docx|\.odt|\.pdf|\.xls|\.txt|\.xlsx|\.pptx|\.ppt|\.png|\.jpg|\.jpeg|\.svg|\.webp)$/i;
-
 function SubHeader({ currentFolder }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -48,122 +44,106 @@ function SubHeader({ currentFolder }) {
     const file = e.target.files[0];
 
     if (currentFolder == null || file == null) return;
+    const fid = uuidV4();
 
-    if (allowedExtensions.exec(file.name)) {
-      const fid = uuidV4();
+    setUploadingFiles((prevUploadingFiles) => [
+      ...prevUploadingFiles,
+      {
+        id: fid,
+        name: file.name,
+        fileMetaData: getFileType(file.name.split('.').pop()),
+        progress: 0,
+        error: false,
+        status: 'uploading',
+      },
+    ]);
 
-      setUploadingFiles((prevUploadingFiles) => [
-        ...prevUploadingFiles,
-        {
-          id: fid,
-          name: file.name,
-          fileMetaData: getFileType(file.name.split('.').pop()),
-          progress: 0,
-          error: false,
-          status: 'uploading',
+    //? Folder Path
+    const folderPath =
+      currentFolder === ROOT_FOLDER
+        ? `${currentFolder.path.join('/')}/`
+        : `${currentFolder.path.map((p) => p.name).join('/')}/${
+            currentFolder.name
+          }/`;
+
+    //   //? Store file in storage of firebase,
+    //   //? in ref dive the path of file storage
+    //   //? put method uploads file in specified location
+
+    const uploadTask = storage
+      .ref(`/files/${currentUser.uid}/${folderPath}/${file.name}`)
+      .put(file, {
+        customMetadata: {
+          fileType: file.type,
         },
-      ]);
+      });
 
-      //? Folder Path
-      const folderPath =
-        currentFolder === ROOT_FOLDER
-          ? `${currentFolder.path.join('/')}/`
-          : `${currentFolder.path.map((p) => p.name).join('/')}/${
-              currentFolder.name
-            }/`;
-
-      //? File Metadata
-
-      //   //? Store file in storage of firebase,
-      //   //? in ref dive the path of file storage
-      //   //? put method uploads file in specified location
-
-      // const uploadTask = storage
-      //   .ref(`/files/${currentUser.uid}/${folderPath}/${file.name}`)
-      //   .put(file, {
-      //     contentType: file.name.split('.').pop(),
-      //   });
-
-      const uploadTask = storage
-        .ref(`/files/${currentUser.uid}/${folderPath}/${file.name}`)
-        .put(file, {
-          customMetadata: {
-            fileType: file.type,
-          },
+    //? Now we want to determine when changes occur or upload finishes,
+    //? for this use the method below;
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress =
+          snapshot.bytesTransferred / snapshot.totalBytes;
+        setUploadingFiles((prevUploadingFiles) => {
+          return prevUploadingFiles.map((uploadFile) => {
+            if (uploadFile.id === fid) {
+              return {
+                ...uploadFile,
+                progress: progress * 100,
+              };
+            }
+            return uploadFile;
+          });
+        });
+      },
+      (error) => {
+        setUploadingFiles((prevUploadingFiles) => {
+          return prevUploadingFiles.map((uploadFile) => {
+            if (uploadFile.id === fid) {
+              return {
+                ...uploadFile,
+                error: true,
+              };
+            }
+            return uploadFile;
+          });
+        });
+      },
+      (complete) => {
+        setUploadingFiles((prevUploadingFiles) => {
+          return prevUploadingFiles.filter((uploadFile) => {
+            return uploadFile.id !== fid;
+          });
         });
 
-      //? Now we want to determine when changes occur or upload finishes,
-      //? for this use the method below;
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            snapshot.bytesTransferred / snapshot.totalBytes;
-          setUploadingFiles((prevUploadingFiles) => {
-            return prevUploadingFiles.map((uploadFile) => {
-              if (uploadFile.id === fid) {
-                return {
-                  ...uploadFile,
-                  progress: progress * 100,
-                };
-              }
-              return uploadFile;
-            });
-          });
-        },
-        (error) => {
-          setUploadingFiles((prevUploadingFiles) => {
-            return prevUploadingFiles.map((uploadFile) => {
-              if (uploadFile.id === fid) {
-                return {
-                  ...uploadFile,
-                  error: true,
-                };
-              }
-              return uploadFile;
-            });
-          });
-        },
-        (complete) => {
-          setUploadingFiles((prevUploadingFiles) => {
-            return prevUploadingFiles.filter((uploadFile) => {
-              return uploadFile.id !== fid;
-            });
-          });
+        toast.success('File uploaded successfully', {
+          position: toast.POSITION.TOP_CENTER,
+        });
 
-          toast.success('File uploaded successfully', {
-            position: toast.POSITION.TOP_CENTER,
-          });
+        uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+          database.files
+            .where('name', '==', file.name)
+            .where('userId', '==', currentUser.uid)
+            .where('folderId', '==', currentFolder.id)
+            .get()
+            .then((existingFiles) => {
+              const existingFile = existingFiles.docs[0];
 
-          uploadTask.snapshot.ref.getDownloadURL().then((url) => {
-            database.files
-              .where('name', '==', file.name)
-              .where('userId', '==', currentUser.uid)
-              .where('folderId', '==', currentFolder.id)
-              .get()
-              .then((existingFiles) => {
-                const existingFile = existingFiles.docs[0];
-
-                // ? To overwrite the existing file url
-                if (existingFile)
-                  existingFile.ref.update({ url: url });
-                else
-                  database.files.add({
-                    url: url,
-                    name: file.name,
-                    createdAt: database.getCurrentTimeStamp(),
-                    folderId: currentFolder.id,
-                    userId: currentUser.uid,
-                  });
-              });
-          });
-        }
-      );
-    } else {
-      toast.error('Select the valid file to upload !', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-    }
+              // ? To overwrite the existing file url
+              if (existingFile) existingFile.ref.update({ url: url });
+              else
+                database.files.add({
+                  url: url,
+                  name: file.name,
+                  createdAt: database.getCurrentTimeStamp(),
+                  folderId: currentFolder.id,
+                  userId: currentUser.uid,
+                });
+            });
+        });
+      }
+    );
   };
 
   return (
