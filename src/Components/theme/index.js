@@ -20,7 +20,7 @@ const themeColors = {
 };
 
 const MIndex = ({ children }) => {
-  const [themeMode, setThemeMode] = useDarkMode('theme', 1);
+  const [themeMode, setThemeMode] = useDarkMode('theme', 0);
 
   const themeOptions = useMemo(() => {
     return {
